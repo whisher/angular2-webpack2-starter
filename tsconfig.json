@@ -7,13 +7,15 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
+    "noEmit": true,
     "noEmitHelpers": true,
     "strictNullChecks": false,
-    "baseUrl": "./src",
-    "paths": {},
     "lib": [
       "dom",
       "es6"
+    ],
+    "typeRoots": [
+      "node_modules/@types"
     ],
     "types": [
       "node",
@@ -22,7 +24,8 @@
   },
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "**/*.spec.ts"
   ],
   "awesomeTypescriptLoaderOptions": {
     "forkChecker": true,

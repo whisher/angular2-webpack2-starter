@@ -8,9 +8,6 @@
 // import 'core-js/es6';
 // Added parts of es6 which are necessary for your project or your browser support requirements.
 
-// TEST
-const ENV = 'developer';
-
 import 'core-js/es6/symbol';
 import 'core-js/es6/object';
 import 'core-js/es6/function';
@@ -37,15 +34,15 @@ import 'zone.js/dist/zone';
 // Typescript emit helpers polyfill
 import 'ts-helpers';
 
-if ('production' === ENV) {
+//if ('production' === ENV) {
   // Production
 
 
-} else {
+//} else {
   // Development
 
   Error.stackTraceLimit = Infinity;
 
   require('zone.js/dist/long-stack-trace-zone');
 
-}
+//}

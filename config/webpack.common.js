@@ -20,46 +20,80 @@ module.exports = {
     'main':      './src/main.ts'
   },
   resolve: {
-    extensions: ['.ts', '.js', '.json']
+    extensions: ['.ts', '.js', '.json'],
+    modules: [helpers.root('src'), helpers.root('node_modules')]
   },
   module: {
     rules: [
-      {
+      /*{
         enforce: 'pre',
         test: /\.ts$/,
         loader: 'tslint-loader',
-        exclude: /(node_modules)/,
-      },
+        exclude: [/\.(spec|e2e)\.ts$/, /node_modules/]
+      },*/
       {
         test: /\.ts$/,
-        loaders: [
-          '@angularclass/hmr-loader',
-          'awesome-typescript-loader',
-          'angular2-template-loader',
-          'angular-router-loader'
-        ],
+        loaders: 'awesome-typescript-loader',
         exclude: [/\.(spec|e2e)\.ts$/]
       },
       {
+        test: /\.ts$/,
+        loaders: 'angular2-template-loader',
+        exclude: [/\.(spec|e2e)\.ts$/]
+      },
+      {
+        test: /\.ts$/,
+        loader: 'ng-router-loader',
+        options: {},
+        exclude: [/\.(spec|e2e)\.ts$/]
+      },
+      {
+        test: /\.ts$/,
+        loaders: '@angularclass/hmr-loader',
+        exclude: [/\.(spec|e2e)\.ts$/]
+      },
+      {
+        test: /\.json$/,
+        use: 'json-loader'
+      },
+      {
         test: /\.html$/,
-        loaders: ['html-loader']
+        use: 'raw-loader',
+        exclude: [helpers.root('src/index.html')]
       },
       {
-        test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-        loader: 'file-loader?name=assets/[name].[hash].[ext]'
-      },
-      {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract({
-          fallbackLoader: 'style-loader',
-          loader: 'css-loader?sourceMap'
-        }),
-        exclude: helpers.root('src', 'app'),
+        test: /\.(jpg|png|gif)$/,
+        use: 'file-loader'
       },
       {
         test: /\.css$/,
-        include: helpers.root('src', 'app'),
-        loader: 'raw-loader'
+        exclude: [helpers.root('src', 'app')],
+        loader: ExtractTextPlugin
+          .extract({
+            fallbackLoader: 'style-loader',
+            loader: [
+              { loader: 'css-loader', query: { modules: true, sourceMaps: true } },
+                'postcss-loader'
+              ]
+          })
+      },
+      {
+        test: /\.css$/,
+        include: [helpers.root('src', 'app')],
+        loader: ['raw-loader','postcss-loader']
+      },
+      {
+        test: /\.scss$/,
+        exclude: /node_modules/,
+        loaders: ['raw-loader', 'sass-loader']
+      },
+      {
+        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+      },
+      {
+        test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        loader: 'file-loader'
       }
     ]
   },
@@ -67,7 +101,6 @@ module.exports = {
     new CommonsChunkPlugin({
       name: ['app', 'vendor', 'polyfills']
     }),
-    new ExtractTextPlugin({ filename: 'bundle.css', disable: false, allChunks: true }),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
       title: METADATA.title,
@@ -80,7 +113,10 @@ module.exports = {
             tslint: {
                 emitErrors: true,
                 failOnHint: true
-            }
+            },
+            postcss: [
+              require('autoprefixer')
+            ]
         }
     })
   ]
