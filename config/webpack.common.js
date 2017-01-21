@@ -25,12 +25,12 @@ module.exports = {
   },
   module: {
     rules: [
-      /*{
+      {
         enforce: 'pre',
         test: /\.ts$/,
         loader: 'tslint-loader',
         exclude: [/\.(spec|e2e)\.ts$/, /node_modules/]
-      },*/
+      },
       {
         test: /\.ts$/,
         loaders: 'awesome-typescript-loader',
@@ -111,8 +111,10 @@ module.exports = {
     new LoaderOptionsPlugin({
         options: {
             tslint: {
-                emitErrors: true,
-                failOnHint: true
+              emitErrors: true,
+              failOnHint: false,
+              resourcePath: helpers.root('./src'),
+              formattersDirectory: './node_modules/tslint-loader/formatters/'
             },
             postcss: [
               require('autoprefixer')
