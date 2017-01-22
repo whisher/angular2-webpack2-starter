@@ -1,9 +1,13 @@
 const webpack = require('webpack');
+/**
+ * Webpack Plugins
+ */
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
+
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
 const helpers = require('./helpers');
 
@@ -107,6 +111,9 @@ module.exports = {
       metadata: METADATA,
       inject: 'body',
       hash: true
+    }),
+    new ScriptExtHtmlWebpackPlugin({
+      defaultAttribute: 'defer'
     }),
     new LoaderOptionsPlugin({
         options: {
