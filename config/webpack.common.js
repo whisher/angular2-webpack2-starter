@@ -20,7 +20,6 @@ module.exports = {
   devtool: 'cheap-module-source-map',
   entry: {
     'polyfills': './src/polyfills.ts',
-    'vendor':    './src/vendor.ts',
     'main':      './src/main.ts'
   },
   resolve: {
@@ -102,9 +101,36 @@ module.exports = {
     ]
   },
   plugins: [
+    /*
+     * Plugin: CommonsChunkPlugin
+     * Description: Shares common code between the pages.
+     * It identifies common modules and put them into a commons chunk.
+     *
+     * See: https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
+     * See: https://github.com/webpack/docs/wiki/optimization#multi-page-app
+     */
     new CommonsChunkPlugin({
-      name: ['app', 'vendor', 'polyfills']
+      name: 'polyfills',
+      chunks: ['polyfills']
     }),
+    // This enables tree shaking of the vendor modules
+    new CommonsChunkPlugin({
+      name: 'vendor',
+      chunks: ['main'],
+      minChunks: module => /node_modules\//.test(module.resource)
+    }),
+    // Specify the correct order the scripts will be injected in
+    new CommonsChunkPlugin({
+      name: ['polyfills', 'vendor'].reverse()
+    }),
+    /*
+     * Plugin: HtmlWebpackPlugin
+     * Description: Simplifies creation of HTML files to serve your webpack bundles.
+     * This is especially useful for webpack bundles that include a hash in the filename
+     * which changes every compilation.
+     *
+     * See: https://github.com/ampedandwired/html-webpack-plugin
+     */
     new HtmlWebpackPlugin({
       template: 'src/index.html',
       title: METADATA.title,
@@ -112,9 +138,21 @@ module.exports = {
       inject: 'body',
       hash: true
     }),
+    /*
+     * Plugin: ScriptExtHtmlWebpackPlugin
+     * Description: Enhances html-webpack-plugin functionality
+     * with different deployment options for your scripts including:
+     *
+     * See: https://github.com/numical/script-ext-html-webpack-plugin
+     */
     new ScriptExtHtmlWebpackPlugin({
       defaultAttribute: 'defer'
     }),
+    /**
+     * Plugin LoaderOptionsPlugin (experimental)
+     *
+     * See: https://gist.github.com/sokra/27b24881210b56bbaff7
+     */
     new LoaderOptionsPlugin({
         options: {
             tslint: {
