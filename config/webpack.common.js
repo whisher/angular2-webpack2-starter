@@ -8,7 +8,8 @@ const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
-
+const Autoprefixer = require('autoprefixer');
+const PostcssImport = require('postcss-import')
 const helpers = require('./helpers');
 
 const METADATA = {
@@ -162,7 +163,8 @@ module.exports = {
               formattersDirectory: './node_modules/tslint-loader/formatters/'
             },
             postcss: [
-              require('autoprefixer')
+              PostcssImport(),
+              Autoprefixer({ browsers: ['last 5 versions'] })
             ]
         }
     })

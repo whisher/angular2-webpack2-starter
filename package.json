@@ -29,7 +29,9 @@
     "@angularclass/hmr": "1.2.2",
     "@angularclass/hmr-loader": "3.0.2",
     "autoprefixer": "^6.6.1",
+    "bootstrap-css-only": "^3.3.7",
     "core-js": "2.4.1",
+    "font-awesome": "^4.7.0",
     "rxjs": "5.0.3",
     "ts-loader": "^2.0.0",
     "zone.js": "0.7.5"
@@ -47,6 +49,7 @@
     "html-webpack-plugin": "2.26.0",
     "json-loader": "^0.5.4",
     "ng-router-loader": "^1.0.2",
+    "postcss-import": "^9.1.0",
     "postcss-loader": "^1.2.2",
     "raw-loader": "^0.5.1",
     "rimraf": "2.5.4",
