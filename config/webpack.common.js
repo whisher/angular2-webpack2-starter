@@ -77,14 +77,14 @@ module.exports = {
             fallbackLoader: 'style-loader',
             loader: [
               { loader: 'css-loader', query: { modules: true, sourceMaps: true } },
-                'postcss-loader'
+                /*'postcss-loader'*/
               ]
           })
       },
       {
         test: /\.css$/,
         include: [helpers.root('src', 'app')],
-        loader: ['raw-loader','postcss-loader']
+        loader: ['to-string-loader','css-loader'/*,'postcss-loader'*/]
       },
       {
         test: /\.scss$/,
@@ -162,10 +162,10 @@ module.exports = {
               resourcePath: helpers.root('./src'),
               formattersDirectory: './node_modules/tslint-loader/formatters/'
             },
-            postcss: [
+          /*  postcss: [
               PostcssImport(),
               Autoprefixer({ browsers: ['last 5 versions'] })
-            ]
+            ]*/
         }
     })
   ]
