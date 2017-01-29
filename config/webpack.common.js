@@ -1,15 +1,24 @@
 const webpack = require('webpack');
+
 /**
  * Webpack Plugins
  */
+const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
+const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 
+/**
+ * External Plugins
+ */
+const AssetsPlugin = require('assets-webpack-plugin');
+const Autoprefixer = require('autoprefixer');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const PostcssImport = require('postcss-import');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
-const Autoprefixer = require('autoprefixer');
-const PostcssImport = require('postcss-import')
+
 const helpers = require('./helpers');
 
 const METADATA = {
@@ -77,14 +86,14 @@ module.exports = {
             fallbackLoader: 'style-loader',
             loader: [
               { loader: 'css-loader', query: { modules: true, sourceMaps: true } },
-                /*'postcss-loader'*/
+                'postcss-loader'
               ]
           })
       },
       {
         test: /\.css$/,
         include: [helpers.root('src', 'app')],
-        loader: ['to-string-loader','css-loader'/*,'postcss-loader'*/]
+        loader: ['raw-loader','postcss-loader']
       },
       {
         test: /\.scss$/,
@@ -102,6 +111,12 @@ module.exports = {
     ]
   },
   plugins: [
+    new AssetsPlugin({
+      path: helpers.root('dist'),
+      filename: 'webpack-assets.json',
+      prettyPrint: true
+    }),
+    new CheckerPlugin(),
     /*
      * Plugin: CommonsChunkPlugin
      * Description: Shares common code between the pages.
@@ -132,12 +147,42 @@ module.exports = {
      *
      * See: https://github.com/ampedandwired/html-webpack-plugin
      */
+     // Workaround for angular/angular#11580
+    new ContextReplacementPlugin(
+      // The (\\|\/) piece accounts for path separators in *nix and Windows
+      /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
+      helpers.root('./src'), // location of your src
+      {} // a map of your routes
+    ),
+    new CopyWebpackPlugin([
+      { from: 'src/meta'}
+    ]),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
       title: METADATA.title,
       metadata: METADATA,
-      inject: 'body',
+      inject: 'head',
       hash: true
+    }),
+    /**
+     * Plugin LoaderOptionsPlugin (experimental)
+     *
+     * See: https://gist.github.com/sokra/27b24881210b56bbaff7
+     */
+    new LoaderOptionsPlugin({
+        debug: true,
+        options: {
+            tslint: {
+              emitErrors: false,
+              failOnHint: false,
+              resourcePath: helpers.root('./src'),
+              formattersDirectory: './node_modules/tslint-loader/formatters/'
+            },
+            postcss: [
+              PostcssImport(),
+              Autoprefixer({ browsers: ['last 5 versions'] })
+            ]
+        }
     }),
     /*
      * Plugin: ScriptExtHtmlWebpackPlugin
@@ -148,25 +193,14 @@ module.exports = {
      */
     new ScriptExtHtmlWebpackPlugin({
       defaultAttribute: 'defer'
-    }),
-    /**
-     * Plugin LoaderOptionsPlugin (experimental)
-     *
-     * See: https://gist.github.com/sokra/27b24881210b56bbaff7
-     */
-    new LoaderOptionsPlugin({
-        options: {
-            tslint: {
-              emitErrors: true,
-              failOnHint: false,
-              resourcePath: helpers.root('./src'),
-              formattersDirectory: './node_modules/tslint-loader/formatters/'
-            },
-          /*  postcss: [
-              PostcssImport(),
-              Autoprefixer({ browsers: ['last 5 versions'] })
-            ]*/
-        }
     })
-  ]
+  ],
+  node: {
+    global: true,
+    crypto: 'empty',
+    process: true,
+    module: false,
+    clearImmediate: false,
+    setImmediate: false
+  }
 };

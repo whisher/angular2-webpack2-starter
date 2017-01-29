@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 /**
  * Webpack Plugins
  */
@@ -9,7 +11,11 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const commonConfig = require('./webpack.common.js');
 const helpers = require('./helpers');
 
-const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
+const ENVIROMENT = process.env.NODE_ENV = process.env.ENV = 'development';
+const METADATA = fs.readFileSync(`${helpers.root('src','env')}/development.json`,'utf8');
+const HOST = process.env.HOST || 'localhost';
+const PORT = process.env.PORT || 7000;
+
 
 module.exports = webpackMerge(commonConfig, {
   devtool: 'cheap-module-source-map',
@@ -18,21 +24,23 @@ module.exports = webpackMerge(commonConfig, {
     path: helpers.root('dist'),
     filename: '[name].bundle.js',
     sourceMapFilename: '[name].map',
-    chunkFilename: '[id].chunk.js',
-    publicPath: '/'
+    chunkFilename: '[id].chunk.js'
   },
 
   plugins: [
     new DefinePlugin({
-      'ENV': JSON.stringify(ENV)
+      'process.env': {
+        'ENV': JSON.stringify(ENVIROMENT),
+        'METADATA': METADATA
+      }
     }),
     new ExtractTextPlugin({ filename: '[name].css', disable: false, allChunks: true })
   ],
 
   devServer: {
-    port: 7000,
+    port: PORT,
+    host: HOST,
     historyApiFallback: true,
-    stats: 'minimal',
     watchOptions: {
       aggregateTimeout: 300,
       poll: 1000
