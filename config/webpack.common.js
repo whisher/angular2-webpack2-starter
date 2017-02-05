@@ -1,5 +1,3 @@
-const webpack = require('webpack');
-
 /**
  * Webpack Plugins
  */
@@ -15,9 +13,11 @@ const AssetsPlugin = require('assets-webpack-plugin');
 const Autoprefixer = require('autoprefixer');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const PostcssImport = require('postcss-import');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+const WebpackNotifierPlugin = require('webpack-notifier');
 
 const helpers = require('./helpers');
 
@@ -97,8 +97,7 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        exclude: /node_modules/,
-        loaders: ['raw-loader', 'sass-loader']
+        loaders: ['raw-loader', 'sass-loader', 'postcss-loader']
       },
       {
         test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
@@ -116,6 +115,12 @@ module.exports = {
       filename: 'webpack-assets.json',
       prettyPrint: true
     }),
+    /*
+     * Plugin: ForkCheckerPlugin
+     * Description: Do type checking in a separate process, so webpack don't need to wait.
+     *
+     * See: https://github.com/s-panferov/awesome-typescript-loader#forkchecker-boolean-defaultfalse
+     */
     new CheckerPlugin(),
     /*
      * Plugin: CommonsChunkPlugin
@@ -155,8 +160,12 @@ module.exports = {
       {} // a map of your routes
     ),
     new CopyWebpackPlugin([
-      { from: 'src/meta'}
+      { from: 'src/meta', to: ''}
     ]),
+    new FaviconsWebpackPlugin({
+      logo: helpers.root('src', 'assets', 'img', 'logo.png'), 
+      inject: true
+    }),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
       title: METADATA.title,
@@ -193,6 +202,10 @@ module.exports = {
      */
     new ScriptExtHtmlWebpackPlugin({
       defaultAttribute: 'defer'
+    }),
+    new WebpackNotifierPlugin({
+      title: METADATA.title,
+      contentImage: helpers.root('src', 'assets', 'img', 'logo.png')
     })
   ],
   node: {

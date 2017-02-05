@@ -4,8 +4,9 @@
   "description": "An Angular 2 Webpack Starter kit featuring Angular 2/ Webpack 2",
   "keywords": [
     "angular2",
-    "webpack",
-    "typescript"
+    "webpack2",
+    "typescript",
+    "itcss"
   ],
   "author": "Bedini Fabio aka whisher <io@ilwebdifabio.com>",
   "homepage": "https://bitbucket.org/whisher/angular2-webpack2-starter",
@@ -30,9 +31,7 @@
     "@angularclass/hmr": "1.2.2",
     "@angularclass/hmr-loader": "3.0.2",
     "autoprefixer": "^6.6.1",
-    "bootstrap-css-only": "^3.3.7",
     "core-js": "2.4.1",
-    "font-awesome": "^4.7.0",
     "rxjs": "5.0.3",
     "ts-loader": "^2.0.0",
     "zone.js": "0.7.5"
@@ -48,10 +47,12 @@
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "0.26.1",
     "extract-text-webpack-plugin": "2.0.0-beta.5",
+    "favicons-webpack-plugin": "^0.0.7",
     "file-loader": "0.9.0",
     "html-webpack-plugin": "2.26.0",
     "json-loader": "^0.5.4",
     "ng-router-loader": "^1.0.2",
+    "node-sass": "^4.5.0",
     "postcss-import": "^9.1.0",
     "postcss-loader": "^1.2.2",
     "raw-loader": "^0.5.1",
@@ -72,7 +73,8 @@
     "webpack-dev-server": "2.2.0",
     "webpack-dll-bundles-plugin": "^1.0.0-beta.5",
     "webpack-md5-hash": "^0.0.5",
-    "webpack-merge": "~2.4.0"
+    "webpack-merge": "~2.4.0",
+    "webpack-notifier": "^1.5.0"
   },
   "repository": {
     "type": "git",
