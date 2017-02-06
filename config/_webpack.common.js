@@ -19,9 +19,6 @@ const PostcssImport = require('postcss-import');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
 
-/**
- * Utilities
- */
 const helpers = require('./helpers');
 
 const METADATA = {
@@ -44,7 +41,9 @@ module.exports = {
       {
         enforce: 'pre',
         test: /\.ts$/,
-        loader: 'tslint-loader',
+        use: [
+          { loader: 'tslint-loader'}
+        ],
         exclude: [
           /node_modules/,
           helpers.root('src','polyfills.ts'),
@@ -52,57 +51,60 @@ module.exports = {
         ]
       },
       /*{
-        loaders: [
-          'raw-loader',
-          'sass-loader',
-          'postcss-loader',
-          helpers.root('config','main-style.loader.js')
+        use: [
+          { loader: 'raw-loader'},
+          { loader: 'sass-loader'},
+          { loader: 'postcss-loader'},
+          { loader: helpers.root('config','main-style.loader.js')}
         ]
       },*/
       {
         test: /\.ts$/,
-        loader: 'awesome-typescript-loader',
-        options: {
-          configFileName: helpers.root('tsconfig.json')
-        },
+        use: [
+          { loader: 'awesome-typescript-loader'}
+        ],
         exclude: [/\.(spec|e2e)\.ts$/]
       },
       {
         test: /\.ts$/,
-        loader: 'angular2-template-loader',
+        use: [
+          { loader: 'angular2-template-loader'}
+        ],
         exclude: [/\.(spec|e2e)\.ts$/]
       },
       {
         test: /\.ts$/,
-        loader: 'ng-router-loader',
-        options: {},
-        exclude: [/\.(spec|e2e)\.ts$/]
-      },
-      {
-        test: /\.ts$/,
-        loader: '@angularclass/hmr-loader',
+        use: [
+          { loader: 'ng-router-loader'}
+        ],
         exclude: [/\.(spec|e2e)\.ts$/]
       },
       {
         test: /\.json$/,
-        loader: 'json-loader'
+        use: [
+          { loader: 'json-loader'}
+        ]
       },
       {
         test: /\.html$/,
-        loader: 'raw-loader',
-        exclude: [helpers.root('src','index.html')]
+        use: [
+          { loader:'raw-loader'}
+        ],
+        exclude: [helpers.root('src/index.html')]
       },
       {
         test: /\.(jpg|png|gif)$/,
-        loader: 'file-loader'
+        use: [
+          { loader: 'file-loader'}
+        ]
       },
       {
         test: /\.css$/,
         exclude: [helpers.root('src', 'app')],
-        loader: ExtractTextPlugin
+        use: ExtractTextPlugin
           .extract({
             fallbackLoader: 'style-loader',
-            loaders: [
+            loader: [
               { loader: 'css-loader', query: { modules: true, sourceMaps: true } },
                 'postcss-loader'
               ]
@@ -111,19 +113,48 @@ module.exports = {
       {
         test: /\.css$/,
         include: [helpers.root('src', 'app')],
-        loaders: ['raw-loader']
+        use: [
+          { loader: 'raw-loader'},
+          { loader: 'postcss-loader'}
+        ]
       },
       {
         test: /\.scss$/,
-        loaders: ['raw-loader', 'css-loader', 'sass-loader']
+        exclude: [helpers.root('src', 'app')],
+        use: ExtractTextPlugin
+          .extract({
+            fallbackLoader: 'style-loader',
+            loader: [
+              { loader: 'css-loader', query: { modules: true, sourceMaps: true } },
+              { loader: 'sass-loader', query: { sourceMaps: true }},
+              { loader: 'postcss-loader'},
+              ]
+          })
       },
       {
+        test: /\.scss$/,
+        include: [helpers.root('src', 'app')],
+        use: [
+          { loader: 'raw-loader'},
+          { loader: 'sass-loader',query: { sourceMaps: true }},
+          { loader: 'postcss-loader'}
+        ]
+      },
+      /*{
+        test: /\.scss$/,
+        use: [
+          { loader: 'raw-loader'},
+          { loader: 'sass-loader'},
+          { loader: 'postcss-loader'}
+        ]
+      },*/
+      {
         test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+        use: 'url-loader?limit=10000&mimetype=application/font-woff'
       },
       {
         test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'file-loader'
+        use: 'file-loader'
       }
     ]
   },
@@ -148,7 +179,7 @@ module.exports = {
      * See: https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
      * See: https://github.com/webpack/docs/wiki/optimization#multi-page-app
      */
-     new CommonsChunkPlugin({
+    new CommonsChunkPlugin({
       name: 'polyfills',
       chunks: ['polyfills']
     }),
