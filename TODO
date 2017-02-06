@@ -10,3 +10,9 @@ alert the site was build
       title: 'Tech-nos',
       contentImage: path.join(__dirname, 'img', 'logo.png')
     })
+
+
+
+
+
+       
