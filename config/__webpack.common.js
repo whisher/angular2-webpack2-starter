@@ -98,7 +98,7 @@ module.exports = {
             use: [
               { loader: 'css-loader', query: { modules: true, sourceMaps: true, importLoaders: 1 } },
               {
-                loader: 'postcss-loader'/*,
+                loader: 'postcss-loader',
                 options: {
                   plugins: function () {
                     return [
@@ -107,7 +107,7 @@ module.exports = {
                    ];
                   }
                 }
-              }*/
+              }
             ]
           })
       },
