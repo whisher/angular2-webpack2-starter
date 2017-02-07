@@ -10,10 +10,12 @@ const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
  * External Plugins
  */
 const AssetsPlugin = require('assets-webpack-plugin');
+const Autoprefixer = require('autoprefixer');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const PostcssImport = require('postcss-import');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
 
@@ -95,7 +97,17 @@ module.exports = {
             fallback: 'style-loader',
             use: [
               { loader: 'css-loader', query: { modules: true, sourceMaps: true, importLoaders: 1 } },
-              { loader: 'postcss-loader'}
+              {
+                loader: 'postcss-loader'/*,
+                options: {
+                  plugins: function () {
+                    return [
+                     PostcssImport(),
+                     Autoprefixer({ browsers: ['last 2 versions'] })
+                   ];
+                  }
+                }
+              }*/
             ]
           })
       },
@@ -104,7 +116,17 @@ module.exports = {
         include: [helpers.root('src', 'app')],
         use: [
           { loader: 'raw-loader'},
-          { loader: 'postcss-loader'}
+          {
+            loader: 'postcss-loader'/*,
+            options: {
+              plugins: function () {
+                return [
+                 PostcssImport(),
+                 Autoprefixer({ browsers: ['last 2 versions'] })
+               ];
+              }
+            }*/
+          }
         ]
       },
       {
@@ -116,7 +138,17 @@ module.exports = {
             use: [
               { loader: 'css-loader', query: { modules: true, sourceMaps: true, importLoaders: 1 } },
               { loader: 'sass-loader', query: { sourceMaps: true }},
-              { loader: 'postcss-loader'}
+              {
+                loader: 'postcss-loader'/*,
+                options: {
+                  plugins: function () {
+                    return [
+                     PostcssImport(),
+                     Autoprefixer({ browsers: ['last 2 versions'] })
+                   ];
+                  }
+                }*/
+              }
             ]
           })
       },
@@ -216,7 +248,11 @@ module.exports = {
               failOnHint: false,
               resourcePath: helpers.root('./src'),
               formattersDirectory: './node_modules/tslint-loader/formatters/'
-            }
+            },
+            postcss: [
+              PostcssImport(),
+              Autoprefixer({ browsers: ['last 2 versions'] })
+            ]
         }
     }),
     /*
