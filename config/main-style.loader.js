@@ -1,13 +1,12 @@
+const fileLoader = require('file-loader');
 const path = require('path');
 const fs = require('fs');
-module.exports = function(source) {
-    this.cacheable();
-    const callback = this.async();
-    const stylesPath = path.resolve(__dirname,'../src','styles.scss');
-    this.addDependency(stylesPath);
-    fs.readFile(stylesPath, "utf-8", function(err, header) {
-        if(err) return callback(err);
-        console.log(header,source);
-        callback(null, header + "\n" + source);
-    });
+module.exports = function(content) {
+  this.cacheable && this.cacheable();
+	this.value = content;
+  const stylesPath = path.resolve(__dirname,'../src','styles.scss');
+  var buf = fs.readFileSync(stylesPath, 'utf8');
+  return buf;
+  //return "module.exports = " + JSON.stringify(buf);
+  //return  fileLoader('../src/styles.scss');
 };

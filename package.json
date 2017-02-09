@@ -9,10 +9,10 @@
     "itcss"
   ],
   "author": "Bedini Fabio aka whisher <io@ilwebdifabio.com>",
-  "homepage": "https://bitbucket.org/whisher/angular2-webpack2-starter",
+  "homepage": "https://github.com/whisher/angular2-webpack2-starter",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server --inline --progress",
+    "start": "webpack-dev-server --inline --progress --hot",
     "test": "karma start",
     "build": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile --bail",
     "lint": "npm run tslint \"src/**/*.ts\"",
@@ -55,6 +55,7 @@
     "karma-jasmine": "^1.1.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.2",
+    "loader-utils": "^0.2.16",
     "ng-router-loader": "^1.0.2",
     "node-sass": "^4.5.0",
     "postcss-import": "^9.1.0",
@@ -81,10 +82,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://whisher@bitbucket.org/whisher/angular2-webpack2-starter.git"
+    "url": "https://github.com/whisher/angular2-webpack2-starter.git"
   },
   "bugs": {
-    "url": "https://bitbucket.org/whisher/angular2-webpack2-starter/issues"
+    "url": "https://github.com/whisher/angular2-webpack2-starter/issues"
   },
   "engines": {
     "node": ">= 7.2.0",

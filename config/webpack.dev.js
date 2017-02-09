@@ -4,6 +4,7 @@ const fs = require('fs');
  * Webpack Plugins
  */
 const DefinePlugin = require('webpack/lib/DefinePlugin');
+const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 
 const webpackMerge = require('webpack-merge');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -28,6 +29,7 @@ module.exports = webpackMerge(commonConfig, {
   },
 
   plugins: [
+    new NamedModulesPlugin(),
     new DefinePlugin({
       'process.env': {
         'ENV': JSON.stringify(ENVIROMENT),

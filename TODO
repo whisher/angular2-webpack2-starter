@@ -1,3 +1,6 @@
+// use style-loader in development
+                fallbackLoader: "style-loader"
+
 "bootstrap-css-only": "^3.3.7",
 "core-js": "2.4.1",
 "font-awesome": "^4.7.0",
@@ -10,9 +13,3 @@ alert the site was build
       title: 'Tech-nos',
       contentImage: path.join(__dirname, 'img', 'logo.png')
     })
-
-
-
-
-
-       

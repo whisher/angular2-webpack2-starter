@@ -57,7 +57,27 @@ module.exports = {
           /node_modules/,
           /\.(spec|e2e)\.ts$/
         ]
-      },
+      }/*,
+      {
+        use: [
+          { loader: 'raw-loader'},
+          { loader: 'css-loader'},
+          { loader: 'sass-loader'},
+          { loader: helpers.root('config','main-style.loader.js')}
+        ]
+      ,
+      {
+        use: ExtractTextPlugin
+          .extract({
+            fallback: 'style-loader',
+            use: [
+            { loader: 'css-loader'},
+            { loader: 'sass-loader'},
+            { loader: helpers.root('config','main-style.loader.js')}
+            ]
+          })
+      },*/
+      ,
       {
         test: /\.ts$/,
         use: [
@@ -78,25 +98,6 @@ module.exports = {
           { loader: 'ng-router-loader'}
         ],
         exclude: [/\.(spec|e2e)\.ts$/]
-      },
-      {
-        test: /\.json$/,
-        use: [
-          { loader: 'json-loader'}
-        ]
-      },
-      {
-        test: /\.html$/,
-        use: [
-          { loader:'raw-loader'}
-        ],
-        exclude: [helpers.root('src/index.html')]
-      },
-      {
-        test: /\.(jpg|png|gif)$/,
-        use: [
-          { loader: 'file-loader'}
-        ]
       },
       {
         test: /\.css$/,
@@ -153,8 +154,35 @@ module.exports = {
         ]
       },
       {
+        test: /\.json$/,
+        use: [
+          { loader: 'json-loader'}
+        ]
+      },
+      {
+        test: /\.html$/,
+        use: [
+          { loader:'raw-loader'}
+        ],
+        exclude: [helpers.root('src/index.html')]
+      },
+      {
+        test: /\.(jpg|png|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: { limit: 10000 }
+          }
+        ]
+      },
+      {
         test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        use: 'url-loader?limit=10000&mimetype=application/font-woff'
+        use: [
+          {
+            loader: 'url-loader',
+            options: { limit: 10000, mimetype: 'application/font-woff' }
+          }
+        ]
       },
       {
         test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
