@@ -12,7 +12,11 @@ module.exports = {
   devtool: 'inline-source-map',
 
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js'],
+    /**
+     * Make sure root is src
+     */
+    modules: [helpers.root('src'), helpers.root('node_modules')]
   },
 
   module: {
@@ -23,8 +27,10 @@ module.exports = {
       },
       {
         test: /\.html$/,
-        loader: 'html-loader'
-
+        use: [
+          { loader:'raw-loader'}
+        ],
+        exclude: [helpers.root('src/index.html')]
       },
       {
         test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
@@ -37,6 +43,16 @@ module.exports = {
       },
       {
         test: /\.css$/,
+        include: helpers.root('src', 'app'),
+        loader: 'raw-loader'
+      },
+      {
+        test: /\.scss$/,
+        exclude: helpers.root('src', 'app'),
+        loader: 'null-loader'
+      },
+      {
+        test: /\.scss$/,
         include: helpers.root('src', 'app'),
         loader: 'raw-loader'
       }

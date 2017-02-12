@@ -19,17 +19,16 @@ const PostcssImport = require('postcss-import');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
 
-const postCssOptions = {
-  plugins: function () {
-    return [
-     PostcssImport(),
-     Autoprefixer({ browsers: ['last 2 versions'] })
-   ];
-  }
-};
-
 const helpers = require('./helpers');
 
+const mainCss = [
+  'css-loader',
+  helpers.root('src','styles.css')
+];
+//mainCss.unshift('style-loader');
+ mainCss.unshift('file-loader?name=[name].[ext]', 'extract-loader');
+//console.log(mainCss.join('!'));
+//process.exit();
 const METADATA = {
   title: 'Angular2 Webpack2',
   baseUrl: '/',
@@ -39,7 +38,8 @@ module.exports = {
   devtool: 'cheap-module-source-map',
   entry: {
     'polyfills': './src/polyfills.ts',
-    'main':      './src/main.ts'
+    'main':      './src/main.ts'/*,
+    'mainstyles': mainCss.join('!')*/
   },
   resolve: {
     extensions: ['.ts', '.js', '.json'],
@@ -57,27 +57,7 @@ module.exports = {
           /node_modules/,
           /\.(spec|e2e)\.ts$/
         ]
-      }/*,
-      {
-        use: [
-          { loader: 'raw-loader'},
-          { loader: 'css-loader'},
-          { loader: 'sass-loader'},
-          { loader: helpers.root('config','main-style.loader.js')}
-        ]
-      ,
-      {
-        use: ExtractTextPlugin
-          .extract({
-            fallback: 'style-loader',
-            use: [
-            { loader: 'css-loader'},
-            { loader: 'sass-loader'},
-            { loader: helpers.root('config','main-style.loader.js')}
-            ]
-          })
-      },*/
-      ,
+      },
       {
         test: /\.ts$/,
         use: [
@@ -106,11 +86,8 @@ module.exports = {
           .extract({
             fallback: 'style-loader',
             use: [
-              { loader: 'css-loader', query: { modules: true, sourceMaps: true, importLoaders: 1 } },
-              {
-                loader: 'postcss-loader',
-                options: postCssOptions
-              }
+              { loader: 'css-loader', query: { modules: false, sourceMaps: true } },
+              {loader: 'postcss-loader'}
             ]
           })
       },
@@ -119,10 +96,7 @@ module.exports = {
         include: [helpers.root('src', 'app')],
         use: [
           { loader: 'raw-loader'},
-          {
-            loader: 'postcss-loader',
-            options: postCssOptions
-          }
+          {loader: 'postcss-loader'}
         ]
       },
       {
@@ -132,12 +106,9 @@ module.exports = {
           .extract({
             fallback: 'style-loader',
             use: [
-              { loader: 'css-loader', query: { modules: true, sourceMaps: true, importLoaders: 1 } },
-              { loader: 'sass-loader', query: { sourceMaps: true }},
-              {
-                loader: 'postcss-loader',
-                options: postCssOptions
-              }
+              { loader: 'css-loader', query: { modules: false, sourceMaps: true } },
+              {loader: 'postcss-loader'},
+              { loader: 'sass-loader', query: { sourceMaps: true }}
             ]
           })
       },
@@ -147,10 +118,7 @@ module.exports = {
         use: [
           { loader: 'raw-loader'},
           { loader: 'sass-loader',query: { sourceMaps: true }},
-          {
-            loader: 'postcss-loader',
-            options: postCssOptions
-          }
+          { loader: 'postcss-loader'}
         ]
       },
       {
